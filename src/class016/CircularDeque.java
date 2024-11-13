@@ -109,6 +109,7 @@ public class CircularDeque {
 					deque[0] = value;
 				} else {
 					l = l == 0 ? (limit - 1) : (l - 1);
+					// l = (l-1 + limit) % limit
 					deque[l] = value;
 				}
 				size++;
@@ -125,6 +126,7 @@ public class CircularDeque {
 					deque[0] = value;
 				} else {
 					r = r == limit - 1 ? 0 : (r + 1);
+					// r = (r+1) %limit
 					deque[r] = value;
 				}
 				size++;
@@ -137,6 +139,7 @@ public class CircularDeque {
 				return false;
 			} else {
 				l = (l == limit - 1) ? 0 : (l + 1);
+				//l = (l  + 1) % limit
 				size--;
 				return true;
 			}
@@ -147,6 +150,7 @@ public class CircularDeque {
 				return false;
 			} else {
 				r = r == 0 ? (limit - 1) : (r - 1);
+				//r = (r - 1 + limit) % limit
 				size--;
 				return true;
 			}
