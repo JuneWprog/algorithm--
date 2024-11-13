@@ -163,6 +163,20 @@ public class BinaryTreeTraversalIteration {
 		}
 		return ans;
 	}
+	def inorderTraversal(head):
+		ans = []
+		if not head:
+			return
+		stack =[]
+		cur = head
+		while cur or stack:
+			while cur:
+				stack.append(cur)
+				cur = cur.left
+			cur = stack.pop()
+			ans.append(cur.val)
+			cur = cur.right
+
 
 	// 用两个栈完成后序遍历
 	// 提交时函数名改为postorderTraversal
