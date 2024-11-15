@@ -57,16 +57,18 @@ public class Code07_CutOrPoison {
 	// 二分答案法
 	// 最优解
 	// 时间复杂度O(n * log(hp))，额外空间复杂度O(1)
+	//最多用ｈｐ＋１回合杀死，最少一次ＫＯ 回合取值范围 
+	
 	public static int fast2(int[] cuts, int[] poisons, int hp) {
 		int ans = Integer.MAX_VALUE;
 		for (int l = 1, r = hp + 1, m; l <= r;) {
 			// m中点，一定要让怪兽在m回合内死掉，更多回合无意义
 			m = l + ((r - l) >> 1);
 			if (f(cuts, poisons, hp, m)) {
-				ans = m;
-				r = m - 1;
+				ans = m;  // can kill 
+				r = m - 1; //search on left side, look for smaller possible round
 			} else {
-				l = m + 1;
+				l = m + 1;  //can't kill 
 			}
 		}
 		return ans;
@@ -77,8 +79,9 @@ public class Code07_CutOrPoison {
 	// limit：回合的限制
 	public static boolean f(int[] cuts, int[] posions, long hp, int limit) {
 		int n = Math.min(cuts.length, limit);
-		for (int i = 0, j = 1; i < n; i++, j++) {
-			hp -= Math.max((long) cuts[i], (long) (limit - j) * (long) posions[i]);
+		for (int i = 0, j = 1; i < n; i++, j++) { 
+			// cuts[i] work on time, poisons[i] work (limit-j )rounds
+			hp -= Math.max((long) cuts[i], (long) (limit - j) * (long) posions[i]); //each round get the most damage 
 			if (hp <= 0) {
 				return true;
 			}
