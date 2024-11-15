@@ -16,16 +16,17 @@ public class Code06_WaitingTime {
 	// 时间复杂度O(m * log(n))，额外空间复杂度O(n)
 	public static int waitingTime1(int[] arr, int m) {
 		// 一个一个对象int[]
-		// [醒来时间，服务一个客人要多久]
+		// [醒来时间，服务一个客人要多久] 一个服务员在（a时开始服务， 服务持续 b 时长）服务完了继续 回堆里等下一轮个服务
 		PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> (a[0] - b[0]));
 		int n = arr.length;
 		for (int i = 0; i < n; i++) {
 			heap.add(new int[] { 0, arr[i] });
 		}
-		for (int i = 0; i < m; i++) {
+		for (int i = 0; i < m; i++) { //m customers
+			//来一个客人， ｐｏｐ找一个服务员
 			int[] cur = heap.poll();
-			cur[0] += cur[1];
-			heap.add(cur);
+			cur[0] += cur[1]; //完成服务，开始时间 ＋ 服务时间
+			heap.add(cur);  //回堆里等下一轮个服务
 		}
 		return heap.peek()[0];
 	}
@@ -33,6 +34,8 @@ public class Code06_WaitingTime {
 	// 二分答案法
 	// 最优解
 	// 时间复杂度O(n * log(min * w))，额外空间复杂度O(1)
+	// range: l= 0, r= min(waiting time) * customers 只用最快的服务员多久能等到？结果 肯定比这小因为有其它服务员帮忙
+	
 	public static int waitingTime2(int[] arr, int w) {
 		int min = Integer.MAX_VALUE;
 		for (int x : arr) {
@@ -40,20 +43,20 @@ public class Code06_WaitingTime {
 		}
 		int ans = 0;
 		for (int l = 0, r = min * w, m; l <= r;) {
-			// m中点，表示一定要让服务员工作的时间！
+			// m中点，表示一定要让服务员工作的时间！用工作时间找出能服务多少人， 服务的人如果 刚好＝＝ｗ＋１（ｙｏｕ）
 			m = l + ((r - l) >> 1);
 			// 能够给几个客人提供服务
 			if (f(arr, m) >= w + 1) {
-				ans = m;
+				ans = m;　//look for a min, so, search in the left part
 				r = m - 1;
 			} else {
-				l = m + 1;
+				l = m + 1; //can't serve w+1 customers, so extend the time
 			}
 		}
 		return ans;
 	}
 
-	// 如果每个服务员工作time，可以接待几位客人（结束的、开始的客人都算）
+	// 如果每个服务员工作time，可以接待几位客人（已经结束的 和正在服务的客人都算 ans += (time / num) （结束） + 1（正服务））
 	public static int f(int[] arr, int time) {
 		int ans = 0;
 		for (int num : arr) {
